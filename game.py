@@ -8,9 +8,11 @@ import numpy as np
 from objects.board import Board
 from objects.snake import Snake
 from objects.food import Food
+from gameMode import GamkeMode
+
+gameMode = GamkeMode.HUMAN
 
 delay = 0.1
-
 score = 0
 high_score = 0
 
@@ -57,47 +59,20 @@ pen.hideturtle()
 pen.goto(0, 260)
 pen.write("Score: 0  High Score: 0", align="center", font=("Courier", 24, "normal"))
 
-# Functions
+# comtrols and keyboard settings bindings
+if(gameMode == GamkeMode.HUMAN):
+    wn.listen()
+    wn.onkeypress(snake.go_up, "w")
+    wn.onkeypress(snake.go_down, "s")
+    wn.onkeypress(snake.go_left, "a")
+    wn.onkeypress(snake.go_right, "d")
 
-def go_up():
-    if snake.head.direction != "down":
-        snake.head.direction = "up"
-
-def go_down():
-    if snake.head.direction != "up":
-        snake.head.direction = "down"
-
-def go_left():
-    if snake.head.direction != "right":
-        snake.head.direction = "left"
-
-def go_right():
-    if snake.head.direction != "left":
-        snake.head.direction = "right"
-
-def move():
-    if snake.head.direction == "up":
-        y = snake.head.ycor()
-        snake.head.sety(y + 20)
-
-    if snake.head.direction == "down":
-        y = snake.head.ycor()
-        snake.head.sety(y - 20)
-
-    if snake.head.direction == "left":
-        x = snake.head.xcor()
-        snake.head.setx(x - 20)
-
-    if snake.head.direction == "right":
-        x = snake.head.xcor()
-        snake.head.setx(x + 20)
-
-# Keyboard bindings
-wn.listen()
-wn.onkeypress(go_up, "w")
-wn.onkeypress(go_down, "s")
-wn.onkeypress(go_left, "a")
-wn.onkeypress(go_right, "d")
+elif(gameMode == GamkeMode.AI or gameMode == GamkeMode.TRAINING):
+    dir = random.randint(0,4)
+    if(dir == 0): snake.go_up
+    elif(dir == 1): snake.go_down
+    elif(dir == 2): snake.go_left
+    elif(dir == 3): snake.go_right
 
 # Main game loop
 while True:
@@ -116,10 +91,6 @@ while True:
         time.sleep(1)
         snake.head.goto(0,0)
         snake.head.direction = "stop"
-
-        # Hide the segments
-        for segment in snake.segments:
-            segment.goto(1000, 1000)
         
         # Clear the segments list
         snake.segments.clear()
@@ -156,7 +127,7 @@ while True:
 
     # Move the end segments first in reverse order
     snake.moveSegments()
-    move()    
+    snake.move()    
 
     # Check for head collision with the body segments
     if(snake.checkForSelfCollition()):
