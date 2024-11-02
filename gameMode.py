@@ -1,6 +1,6 @@
-import enum
+from enum import Enum
 
-class GamkeMode(enum):
+class GamkeMode(Enum):
     HUMAN = 1
     TRAINING = 2
     AI = 3
