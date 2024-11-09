@@ -1,15 +1,16 @@
 import turtle
 import numpy as np
+from utils import get_turtle_dimensions
 
 class Snake:
-    def __init__(self):
+    def __init__(self,startPosX,startPosY):
         # Snake head
         self._head = turtle.Turtle()
         self._head.speed(0)
         self._head.shape("square")
         self._head.color("black")
         self._head.penup()
-        self._head.goto(0,0)
+        self._head.goto(startPosX,startPosY)
         self._head.direction = "stop"
 
         self._segments = []
@@ -41,6 +42,14 @@ class Snake:
     def isAlive(self,value):
         self.isAlive = value
 
+    def getWidth(self):
+        _,snakeWidth = get_turtle_dimensions(self.head)
+        return snakeWidth
+    
+    def getHeight(self):
+        snakeHeight,_ = get_turtle_dimensions(self.head)
+        return snakeHeight
+    
     def addSegment(self):
         new_segment = turtle.Turtle()
         new_segment.speed(0)
@@ -70,7 +79,7 @@ class Snake:
     def clearTail(self):
         # Hide the segments
         for segment in self.segments:
-            segment.goto(1000, 1000)
+            segment.hide
     
         # Clear the segments list
         self.segments.clear()
